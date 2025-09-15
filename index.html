@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LightingPro Toolkit - Professional Lighting Design Tools</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #132b54 0%, #fc9352 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        text-align: center;
+      }
+
+      h1 {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        color: #7f8c8d;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+      }
+
+      .tool-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+      }
+
+      .tool-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 45px rgba(31, 38, 135, 0.5);
+      }
+
+      .tool-title {
+        color: #2c3e50;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tool-icon {
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 14px;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #34495e;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e6ed;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      button {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .result {
+        background: linear-gradient(135deg, #f8f9ff, #e8f2ff);
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 15px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .color-palette {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .color-swatch {
+        height: 60px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .color-swatch:hover {
+        transform: scale(1.05);
+      }
+
+      .fixture-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      .fixture-table th,
+      .fixture-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .fixture-table th {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .fixture-table tr:hover {
+        background-color: #f5f5f5;
+      }
+
+      .tab-container {
+        margin-bottom: 20px;
+      }
+
+      .tabs {
+        display: flex;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 10px 10px 0 0;
+        overflow: hidden;
+      }
+
+      .tab {
+        flex: 1;
+        padding: 12px 20px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+      }
+
+      .tab.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .tab-content {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 0 0 10px 10px;
+        backdrop-filter: blur(10px);
+      }
+
+      .reference-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .reference-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+
+      .footer {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        margin-top: 30px;
+        color: #7f8c8d;
+      }
+
+      @media (max-width: 768px) {
+        .tool-grid {
+          grid-template-columns: 1fr;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .container {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>⚡ LightingPro Toolkit</h1>
+        <p class="subtitle">Professional Tools for Lighting Designers</p>
+        <p>
+          Comprehensive suite of calculators, converters, and reference tools
+          for theatrical, architectural, and event lighting
+        </p>
+      </header>
+
+      <div class="tool-grid">
+        <!-- Lux/Lumens Calculator -->
+        <div class="tool-card">
+          <h3 class="tool-title">
+            <span class="tool-icon">💡</span>
+            Lux/Lumens Calculator
+          </h3>
+          <div class="input-group">
+            <label for="lumens">Lumens:</label>
+            <input type="number" id="lumens" placeholder="Enter lumens" />
+          </div>
+          <div class="input-group">
+            <label for="area">Area (m²):</label>
+            <input
+              type="number"
+              id="area"
+              placeholder="Enter area in square meters"
+            />
+          </div>
+          <button onclick="calculateLux()">Calculate Lux</button>
+          <div id="luxResult" class="result" style="display: none"></div>
+        </div>
+
+        <!-- Beam Angle Calculator -->
+        <div class="tool-card">
+          <h3 class="tool-title">
+            <span class="tool-icon">📐</span>
+            Beam Angle Calculator
+          </h3>
+          <div class="input-group">
+            <label for="distance">Throw Distance (m):</label>
+            <input
+              type="number"
+              id="distance"
+              placeholder="Distance to target"
+            />
+          </div>
+          <div class="input-group">
+            <label for="beamAngle">Beam Angle (degrees):</label>
+            <input type="number" id="beamAngle" placeholder="Beam angle" />
+          </div>
+          <button onclick="calculateBeamDiameter()">Calculate Coverage</button>
+          <div id="beamResult" class="result" style="display: none"></div>
+        </div>
+
+        <!-- DMX Address Calculator -->
+        <div class="tool-card">
+          <h3 class="tool-title">
+            <span class="tool-icon">🎛️</span>
+            DMX Address Calculator
+          </h3>
+          <div class="input-group">
+            <label for="universe">Universe:</label>
+            <input type="number" id="universe" min="1" max="63999" value="1" />
+          </div>
+          <div class="input-group">
+            <label for="channel">Channel:</label>
+            <input type="number" id="channel" min="1" max="512" value="1" />
+          </div>
+          <div class="input-group">
+            <label for="mode">Fixture Mode:</label>
+            <select id="mode">
+              <option value="1">1 Channel</option>
+              <option value="3">3 Channel (RGB)</option>
+              <option value="4">4 Channel (RGBW)</option>
+              <option value="7">7 Channel</option>
+              <option value="16">16 Channel</option>
+            </select>
+          </div>
+          <button onclick="calculateDMX()">Calculate DMX Info</button>
+          <div id="dmxResult" class="result" style="display: none"></div>
+        </div>
+
+        <!-- Power Consumption Calculator -->
+        <div class="tool-card">
+          <h3 class="tool-title">
+            <span class="tool-icon">⚡</span>
+            Power Calculator
+          </h3>
+          <div class="input-group">
+            <label for="fixtures">Number of Fixtures:</label>
+            <input type="number" id="fixtures" placeholder="Total fixtures" />
+          </div>
+          <div class="input-group">
+            <label for="wattage">Wattage per Fixture (W):</label>
+            <input type="number" id="wattage" placeholder="Watts per fixture" />
+          </div>
+          <div class="input-group">
+            <label for="voltage">Voltage (V):</label>
+            <select id="voltage">
+              <option value="120">120V (US)</option>
+              <option value="230">230V (EU)</option>
+              <option value="240">240V (UK)</option>
+            </select>
+          </div>
+          <button onclick="calculatePower()">Calculate Power</button>
+          <div id="powerResult" class="result" style="display: none"></div>
+        </div>
+
+        <!-- Color Temperature Converter -->
+        <div class="tool-card">
+          <h3 class="tool-title">
+            <span class="tool-icon">🌡️</span>
+            Color Temperature Guide
+          </h3>
+          <div class="input-group">
+            <label for="kelvin">Temperature (K):</label>
+            <input
+              type="number"
+              id="kelvin"
+              placeholder="e.g., 3200"
+              min="1000"
+              max="10000"
+            />
+          </div>
+          <button onclick="showColorTemp()">Show Color Info</button>
+          <div id="colorTempResult" class="result" style="display: none"></div>
+          <div class="color-palette">
+            <div
+              class="color-swatch"
+              style="background: #ff8c42"
+              onclick="setKelvin(2000)"
+            >
+              2000K
+            </div>
+            <div
+              class="color-swatch"
+              style="background: #ffa726"
+              onclick="setKelvin(2700)"
+            >
+              2700K
+            </div>
+            <div
+              class="color-swatch"
+              style="background: #ffcc80"
+              onclick="setKelvin(3200)"
+            >
+              3200K
+            </div>
+            <div
+              class="color-swatch"
+              style="background: #fff3e0"
+              onclick="setKelvin(4000)"
+            >
+              4000K
+            </div>
+            <div
+              class="color-swatch"
+              style="background: #e1f5fe"
+              onclick="setKelvin(5600)"
+            >
+              5600K
+            </div>
+            <div
+              class="color-swatch"
+              style="background: #b3e5fc"
+              onclick="setKelvin(6500)"
+            >
+              6500K
+            </div>
+          </div>
+        </div>
+
+        <!-- Cable Length Calculator -->
+        <div class="tool-card">
+          <h3 class="tool-title">
+            <span class="tool-icon">🔌</span>
+            Cable/Voltage Drop Calculator
+          </h3>
+          <div class="input-group">
+            <label for="cableLength">Cable Length (m):</label>
+            <input
+              type="number"
+              id="cableLength"
+              placeholder="Total cable run"
+            />
+          </div>
+          <div class="input-group">
+            <label for="current">Current (A):</label>
+            <input
+              type="number"
+              id="current"
+              placeholder="Total current draw"
+            />
+          </div>
+          <div class="input-group">
+            <label for="cableType">Cable Type:</label>
+            <select id="cableType">
+              <option value="2.5">2.5mm² (13A)</option>
+              <option value="4">4mm² (20A)</option>
+              <option value="6">6mm² (25A)</option>
+              <option value="10">10mm² (32A)</option>
+            </select>
+          </div>
+          <button onclick="calculateVoltageDrop()">Calculate Drop</button>
+          <div
+            id="voltageDropResult"
+            class="result"
+            style="display: none"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Reference Tables -->
+      <div class="tool-card">
+        <div class="tab-container">
+          <div class="tabs">
+            <button class="tab active" onclick="showTab('gel-colors')">
+              Gel Colors
+            </button>
+            <button class="tab" onclick="showTab('fixtures')">
+              Common Fixtures
+            </button>
+            <button class="tab" onclick="showTab('standards')">
+              Industry Standards
+            </button>
+          </div>
+
+          <div id="gel-colors" class="tab-content">
+            <h4>Popular Gel Colors Reference</h4>
+            <div class="reference-grid">
+              <div class="reference-item">
+                <strong>Lee 200 - Double CT Blue</strong><br />
+                Converts 3200K to 5600K
+              </div>
+              <div class="reference-item">
+                <strong>Lee 204 - Full CT Orange</strong><br />
+                Converts 5600K to 3200K
+              </div>
+              <div class="reference-item">
+                <strong>Lee 026 - Bright Red</strong><br />
+                Primary red filter
+              </div>
+              <div class="reference-item">
+                <strong>Lee 079 - Just Blue</strong><br />
+                Popular blue wash
+              </div>
+              <div class="reference-item">
+                <strong>Lee 139 - Primary Green</strong><br />
+                Saturated green
+              </div>
+              <div class="reference-item">
+                <strong>Lee 156 - Chocolate</strong><br />
+                Warm amber tone
+              </div>
+            </div>
+          </div>
+
+          <div id="fixtures" class="tab-content" style="display: none">
+            <h4>Common Lighting Fixtures</h4>
+            <table class="fixture-table">
+              <thead>
+                <tr>
+                  <th>Fixture Type</th>
+                  <th>Power</th>
+                  <th>Beam Angle</th>
+                  <th>DMX Channels</th>
+                  <th>Typical Use</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>LED Par 64</td>
+                  <td>180W</td>
+                  <td>25°</td>
+                  <td>3-7</td>
+                  <td>Wash lighting</td>
+                </tr>
+                <tr>
+                  <td>Moving Head Spot</td>
+                  <td>300W</td>
+                  <td>8-40°</td>
+                  <td>16-20</td>
+                  <td>Effects, gobo projection</td>
+                </tr>
+                <tr>
+                  <td>Fresnel 650W</td>
+                  <td>650W</td>
+                  <td>12-60°</td>
+                  <td>1</td>
+                  <td>Key light, wash</td>
+                </tr>
+                <tr>
+                  <td>LED Strip</td>
+                  <td>24W/m</td>
+                  <td>120°</td>
+                  <td>3-4</td>
+                  <td>Cyc lighting, accents</td>
+                </tr>
+                <tr>
+                  <td>Profile Spot</td>
+                  <td>500W</td>
+                  <td>Variable</td>
+                  <td>1</td>
+                  <td>Precise beam control</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="standards" class="tab-content" style="display: none">
+            <h4>Industry Standards & Guidelines</h4>
+            <div class="reference-grid">
+              <div class="reference-item">
+                <strong>Theatre Lighting Levels</strong><br />
+                General wash: 200-400 lux<br />
+                Reading light: 500-1000 lux
+              </div>
+              <div class="reference-item">
+                <strong>Color Temperatures</strong><br />
+                Tungsten: 3200K<br />
+                Daylight: 5600K<br />
+                Cool white LED: 6500K
+              </div>
+              <div class="reference-item">
+                <strong>DMX Standards</strong><br />
+                512 channels per universe<br />
+                Refresh rate: 44Hz<br />
+                Data rate: 250 kbit/s
+              </div>
+              <div class="reference-item">
+                <strong>Safety Distances</strong><br />
+                Min height: 3m for public access<br />
+                Hot fixture clearance: 0.5m<br />
+                Emergency exit lighting: 1 lux min
+              </div>
+              <div class="reference-item">
+                <strong>Power Distribution</strong><br />
+                Max 16A per circuit (UK)<br />
+                RCD protection required<br />
+                IP65 for outdoor fixtures
+              </div>
+              <div class="reference-item">
+                <strong>Hanging Points</strong><br />
+                Safety factor: 8:1 minimum<br />
+                Secondary safety required<br />
+                Regular inspection intervals
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          Professional Lighting Design Toolkit • Built for Industry
+          Professionals
+        </p>
+        <p>
+          Created with expertise in theatrical, architectural, and event
+          lighting design
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      // Lux Calculator
+      function calculateLux() {
+        const lumens = parseFloat(document.getElementById("lumens").value);
+        const area = parseFloat(document.getElementById("area").value);
+
+        if (!lumens || !area || area <= 0) {
+          alert("Please enter valid lumens and area values");
+          return;
+        }
+
+        const lux = lumens / area;
+        const result = document.getElementById("luxResult");
+        result.style.display = "block";
+        result.innerHTML = `
+                <strong>Illuminance: ${lux.toFixed(2)} lux</strong><br>
+                ${getLuxApplication(lux)}
+            `;
+      }
+
+      function getLuxApplication(lux) {
+        if (lux < 50) return "Suitable for: Ambient/mood lighting";
+        if (lux < 200) return "Suitable for: General lighting, corridors";
+        if (lux < 500) return "Suitable for: Office work, retail display";
+        if (lux < 1000) return "Suitable for: Detailed work, stage lighting";
+        return "Suitable for: High precision work, surgical lighting";
+      }
+
+      // Beam Angle Calculator
+      function calculateBeamDiameter() {
+        const distance = parseFloat(document.getElementById("distance").value);
+        const angle = parseFloat(document.getElementById("beamAngle").value);
+
+        if (!distance || !angle) {
+          alert("Please enter valid distance and beam angle");
+          return;
+        }
+
+        const radius = distance * Math.tan((angle * Math.PI) / 180 / 2);
+        const diameter = radius * 2;
+        const area = Math.PI * radius * radius;
+
+        const result = document.getElementById("beamResult");
+        result.style.display = "block";
+        result.innerHTML = `
+                <strong>Coverage Area:</strong><br>
+                Diameter: ${diameter.toFixed(2)}m<br>
+                Radius: ${radius.toFixed(2)}m<br>
+                Area: ${area.toFixed(2)}m²
+            `;
+      }
+
+      // DMX Calculator
+      function calculateDMX() {
+        const universe = parseInt(document.getElementById("universe").value);
+        const channel = parseInt(document.getElementById("channel").value);
+        const mode = parseInt(document.getElementById("mode").value);
+
+        const absoluteAddress = (universe - 1) * 512 + channel;
+        const endChannel = channel + mode - 1;
+        const remainingChannels = 512 - endChannel;
+
+        const result = document.getElementById("dmxResult");
+        result.style.display = "block";
+        result.innerHTML = `
+                <strong>DMX Information:</strong><br>
+                Absolute Address: ${absoluteAddress}<br>
+                Channel Range: ${channel} - ${endChannel}<br>
+                Remaining Channels: ${
+                  remainingChannels >= 0 ? remainingChannels : "OVERFLOW!"
+                }<br>
+                ${
+                  remainingChannels < 0
+                    ? '<span style="color: red;">⚠️ Exceeds universe capacity!</span>'
+                    : ""
+                }
+            `;
+      }
+
+      // Power Calculator
+      function calculatePower() {
+        const fixtures = parseInt(document.getElementById("fixtures").value);
+        const wattage = parseFloat(document.getElementById("wattage").value);
+        const voltage = parseFloat(document.getElementById("voltage").value);
+
+        if (!fixtures || !wattage || !voltage) {
+          alert("Please enter all power values");
+          return;
+        }
+
+        const totalWatts = fixtures * wattage;
+        const current = totalWatts / voltage;
+        const kva = totalWatts / 1000;
+
+        const result = document.getElementById("powerResult");
+        result.style.display = "block";
+        result.innerHTML = `
+                <strong>Power Requirements:</strong><br>
+                Total Power: ${totalWatts}W (${kva.toFixed(2)}kW)<br>
+                Current Draw: ${current.toFixed(2)}A<br>
+                Recommended Circuit: ${getCircuitSize(current)}A<br>
+                ${
+                  current > 13
+                    ? '<span style="color: orange;">⚠️ Consider load distribution</span>'
+                    : "✓ Safe for standard 16A circuit"
+                }
+            `;
+      }
+
+      function getCircuitSize(current) {
+        if (current <= 10) return "16";
+        if (current <= 16) return "20";
+        if (current <= 25) return "32";
+        return "63";
+      }
+
+      // Color Temperature
+      function showColorTemp() {
+        const kelvin = parseInt(document.getElementById("kelvin").value);
+
+        if (!kelvin || kelvin < 1000 || kelvin > 10000) {
+          alert("Please enter a temperature between 1000K and 10000K");
+          return;
+        }
+
+        const result = document.getElementById("colorTempResult");
+        result.style.display = "block";
+        result.innerHTML = `
+                <strong>${kelvin}K Color Temperature:</strong><br>
+                ${getColorDescription(kelvin)}<br>
+                ${getColorApplication(kelvin)}
+            `;
+      }
+
+      function setKelvin(temp) {
+        document.getElementById("kelvin").value = temp;
+        showColorTemp();
+      }
+
+      function getColorDescription(k) {
+        if (k < 2000) return "Very warm, candle-like";
+        if (k < 2700) return "Warm, incandescent bulb";
+        if (k < 3200) return "Warm white, tungsten standard";
+        if (k < 4000) return "Neutral white";
+        if (k < 5000) return "Cool white";
+        if (k < 6500) return "Daylight";
+        return "Cool daylight, overcast sky";
+      }
+
+      function getColorApplication(k) {
+        if (k < 2700) return "Best for: Intimate settings, restaurants";
+        if (k < 3200) return "Best for: Theatre tungsten, warm scenes";
+        if (k < 4000) return "Best for: General lighting, retail";
+        if (k < 5600) return "Best for: Photography, video work";
+        return "Best for: Daylight matching, cool scenes";
+      }
+
+      // Voltage Drop Calculator
+      function calculateVoltageDrop() {
+        const length = parseFloat(document.getElementById("cableLength").value);
+        const current = parseFloat(document.getElementById("current").value);
+        const cableSize = parseFloat(
+          document.getElementById("cableType").value
+        );
+
+        if (!length || !current || !cableSize) {
+          alert("Please enter all cable values");
+          return;
+        }
+
+        // Resistance values for copper cable (ohms per km)
+        const resistance = {
+          2.5: 7.41,
+          4: 4.61,
+          6: 3.08,
+          10: 1.83,
+        };
+
+        const voltDrop = (2 * length * current * resistance[cableSize]) / 1000;
+        const percentDrop = (voltDrop / 230) * 100; // Assuming 230V
+
+        const result = document.getElementById("voltageDropResult");
+        result.style.display = "block";
+        result.innerHTML = `
+                <strong>Voltage Drop Analysis:</strong><br>
+                Voltage Drop: ${voltDrop.toFixed(2)}V<br>
+                Percentage Drop: ${percentDrop.toFixed(2)}%<br>
+                ${
+                  percentDrop > 3
+                    ? '<span style="color: red;">⚠️ Exceeds 3% recommendation!</span>'
+                    : "✓ Within acceptable limits"
+                }<br>
+                ${
+                  percentDrop > 3
+                    ? "Consider larger cable size or shorter runs"
+                    : ""
+                }
+            `;
+      }
+
+      // Tab functionality
+      function showTab(tabName) {
+        // Hide all tab contents
+        const contents = document.querySelectorAll(".tab-content");
+        contents.forEach((content) => (content.style.display = "none"));
+
+        // Remove active class from all tabs
+        const tabs = document.querySelectorAll(".tab");
+        tabs.forEach((tab) => tab.classList.remove("active"));
+
+        // Show selected tab and mark as active
+        document.getElementById(tabName).style.display = "block";
+        event.target.classList.add("active");
+      }
+
+      // Initialize with some demo calculations on page load
+      window.onload = function () {
+        // Set some example values
+        document.getElementById("lumens").value = "1000";
+        document.getElementById("area").value = "5";
+
+        document.getElementById("distance").value = "5";
+        document.getElementById("beamAngle").value = "30";
+
+        document.getElementById("kelvin").value = "3200";
+      };
+    </script>
+  </body>
+</html>
